@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -50,16 +51,12 @@ void AbasePawn::Tick(float DeltaTime)
 	FHitResult OutHit;
 	FVector Start = FollowCamera->GetComponentLocation();
 
-	// alternatively you can get the camera location
-	// FVector Start = FirstPersonCameraComponent->GetComponentLocation();
-
-	
 	FVector End = ((FollowCamera->GetForwardVector() * 1000.f) + Start);
 	FCollisionQueryParams CollisionParams;
 
 	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1f, 0, 1);
 
-	if ()
+	//if ()
 	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams)) {
 
 	}
@@ -75,6 +72,9 @@ void AbasePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAxis("xAxis", this, &AbasePawn::CameraYaw_z);
 	PlayerInputComponent->BindAxis("yAxis", this, &AbasePawn::CameraPitch_y);
+
+	PlayerInputComponent->BindAction("changePawn", IE_Pressed, this, &AbasePawn::changePawn);
+
 
 
 }
@@ -95,6 +95,25 @@ void AbasePawn::CameraPitch_y(float val) {
 	cameraBoom->SetRelativeRotation(newR);
 }
 
+void AbasePawn::changePawn() {
+	
+	//Line Trace
+	FHitResult OutHit;
+	FVector Start = FollowCamera->GetComponentLocation();
 
+	FVector End = ((FollowCamera->GetForwardVector() * 2000.f) + Start);
+	FCollisionQueryParams CollisionParams;
+
+	//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1f, 0, 1);
+
+	//if ()
+	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams)) {
+		//UE_LOG(LogTemp, Warning, TEXT("noice-----------------------------------------"));
+		AbasePawn* pawnA = Cast<AbasePawn>(OutHit.Actor);
+		if (pawnA) {
+			UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(pawnA);
+		}
+	}
+}
 
 

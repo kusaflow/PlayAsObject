@@ -44,4 +44,7 @@ public:
 	UFUNCTION()
 		void CameraPitch_y(float val);
 
+	UFUNCTION()
+		void changePawn();
+
 };
