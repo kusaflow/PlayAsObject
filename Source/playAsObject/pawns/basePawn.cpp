@@ -7,6 +7,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "Materials/MaterialParameterCollection.h"
+#include "Materials/MaterialParameterCollectionInstance.h"
 
 
 // Sets default values
@@ -30,6 +32,9 @@ AbasePawn::AbasePawn()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(cameraBoom, USpringArmComponent::SocketName);
 
+	mesh->SetSimulatePhysics(true);
+	mesh->SetRenderCustomDepth(true);
+
 
 }
 
@@ -38,8 +43,9 @@ void AbasePawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	mesh->SetSimulatePhysics(true);
-	
+	if (MaterialParameterCollectionAsset) {
+		Matinst = GetWorld()->GetParameterCollectionInstance(MaterialParameterCollectionAsset);
+	}
 }
 
 // Called every frame
@@ -51,16 +57,23 @@ void AbasePawn::Tick(float DeltaTime)
 	FHitResult OutHit;
 	FVector Start = FollowCamera->GetComponentLocation();
 
-	FVector End = ((FollowCamera->GetForwardVector() * 1000.f) + Start);
+	FVector End = ((FollowCamera->GetForwardVector() * 2000.f) + Start);
 	FCollisionQueryParams CollisionParams;
 
-	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1f, 0, 1);
-
-	//if ()
-	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams)) {
-
+	
+	if (UGameplayStatics::GetPlayerPawn(GetWorld(), 0) == this) {
+		//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1f, 0, 5);
+		if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams)) {
+			AbasePawn* pawnA = Cast<AbasePawn>(OutHit.Actor);
+			if (pawnA) {
+				pawnA->mesh->SetRenderCustomDepth(true);	
+			}
+		}
 	}
 
+	
+
+	
 
 
 }
@@ -73,8 +86,10 @@ void AbasePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("xAxis", this, &AbasePawn::CameraYaw_z);
 	PlayerInputComponent->BindAxis("yAxis", this, &AbasePawn::CameraPitch_y);
 
-	PlayerInputComponent->BindAction("changePawn", IE_Pressed, this, &AbasePawn::changePawn);
+	PlayerInputComponent->BindAxis("Scan", this, &AbasePawn::ScanForObj);
 
+
+	PlayerInputComponent->BindAction("changePawn", IE_Pressed, this, &AbasePawn::changePawn);
 
 
 }
@@ -115,5 +130,17 @@ void AbasePawn::changePawn() {
 		}
 	}
 }
+
+void AbasePawn::ScanForObj(float val) {
+	//scan Effect
+	if (Matinst) {
+		Matinst->SetScalarParameterValue("highLight", val);
+	}
+}
+
+
+
+
+
 
 
