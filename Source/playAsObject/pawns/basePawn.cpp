@@ -35,6 +35,13 @@ AbasePawn::AbasePawn()
 	mesh->SetSimulatePhysics(true);
 	mesh->SetRenderCustomDepth(true);
 
+	cameraBoom->bInheritPitch = cameraBoom->bInheritRoll = cameraBoom->bInheritYaw = false;
+
+	cameraBoom->bDoCollisionTest = true;
+
+	limitMin = -80;
+	limitMax = 4;
+
 
 }
 
@@ -52,27 +59,6 @@ void AbasePawn::BeginPlay()
 void AbasePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	//Line Trace
-	FHitResult OutHit;
-	FVector Start = FollowCamera->GetComponentLocation();
-
-	FVector End = ((FollowCamera->GetForwardVector() * 2000.f) + Start);
-	FCollisionQueryParams CollisionParams;
-
-	
-	if (UGameplayStatics::GetPlayerPawn(GetWorld(), 0) == this) {
-		//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1f, 0, 5);
-		if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams)) {
-			AbasePawn* pawnA = Cast<AbasePawn>(OutHit.Actor);
-			if (pawnA) {
-				pawnA->mesh->SetRenderCustomDepth(true);	
-			}
-		}
-	}
-
-	
-
 	
 
 
@@ -105,7 +91,7 @@ void AbasePawn::CameraYaw_z(float val) {
 void AbasePawn::CameraPitch_y(float val) {
 	
 	FRotator newR = cameraBoom->GetRelativeRotation();
-	newR.Pitch = FMath::Clamp(newR.Pitch + val, -80.0f, 4.0f);
+	newR.Pitch = FMath::Clamp(newR.Pitch + val, limitMin, limitMax);
 
 	cameraBoom->SetRelativeRotation(newR);
 }
@@ -116,7 +102,7 @@ void AbasePawn::changePawn() {
 	FHitResult OutHit;
 	FVector Start = FollowCamera->GetComponentLocation();
 
-	FVector End = ((FollowCamera->GetForwardVector() * 2000.f) + Start);
+	FVector End = ((FollowCamera->GetForwardVector() * 20000.f) + Start);
 	FCollisionQueryParams CollisionParams;
 
 	//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1f, 0, 1);

@@ -33,6 +33,13 @@ public:
 
 	class UMaterialParameterCollectionInstance* Matinst;
 	
+	//pitch limit
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CAMERA_S", meta = (AllowPrivateAccess = "true"))
+		float limitMin;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CAMERA_S", meta = (AllowPrivateAccess = "true"))
+		float limitMax;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
