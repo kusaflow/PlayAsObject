@@ -37,6 +37,8 @@ AdoorTriggerBase::AdoorTriggerBase()
 void AdoorTriggerBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	overlapA = 0;
 	
 }
 
@@ -50,8 +52,16 @@ void AdoorTriggerBase::Tick(float DeltaTime)
 
 void AdoorTriggerBase::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	
+	
 	AbasePawn* myPawn = Cast<AbasePawn>(OtherActor);
 	if (myPawn) {
+		overlapA++;
+
+		if (overlapA > 1) {
+			return;
+		}
+
 		trigger->SetRelativeLocation(FVector(0,0,-9));
 		for (int i = 0; i < gates.Num(); i++) {
 			gates[i]->bDoOpen = !gates[i]->bDoOpen;
@@ -61,11 +71,16 @@ void AdoorTriggerBase::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 
 void AdoorTriggerBase::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+
 	AbasePawn* myPawn = Cast<AbasePawn>(OtherActor);
 	if (myPawn) {
-		trigger->SetRelativeLocation(FVector(0, 0, 0));
-		for (int i = 0; i < gates.Num(); i++) {
-			gates[i]->bDoOpen = !gates[i]->bDoOpen;
+		overlapA--;
+		
+		if (overlapA == 0) {
+			trigger->SetRelativeLocation(FVector(0, 0, 0));
+			for (int i = 0; i < gates.Num(); i++) {
+				gates[i]->bDoOpen = !gates[i]->bDoOpen;
+			}
 		}
 	}
 }

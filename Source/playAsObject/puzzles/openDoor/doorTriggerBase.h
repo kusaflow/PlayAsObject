@@ -27,6 +27,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DoorType", meta = (AllowPrivateAccess = "true"))
 		TArray<class AOpendoorBase*> gates;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DoorType", meta = (AllowPrivateAccess = "true"))
+	int overlapA;
 
 
 protected:
