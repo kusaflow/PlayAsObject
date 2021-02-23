@@ -31,6 +31,9 @@ public:
 
 	float laserBounce = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Laser", meta = (AllowPrivateAccess = "true"))
+	float traceLen = 1000;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

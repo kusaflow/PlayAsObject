@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "Materials/Material.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "laserMesh.h"
 
 // Sets default values
 Alaser_base::Alaser_base()
@@ -17,6 +18,8 @@ Alaser_base::Alaser_base()
 
 	laserPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LaserPoint"));
 	laserPoint->SetupAttachment(laserBody);
+
+	traceLen = 1000;
 
 }
 
@@ -36,8 +39,7 @@ void Alaser_base::Tick(float DeltaTime)
 	if (traceLaser >= 20) {
 		traceLaser = 0;
 		//Line Trace
-		float traceLen = 1000;
-
+		
 		FHitResult OutHit;
 		FVector Start;
 
@@ -55,9 +57,14 @@ void Alaser_base::Tick(float DeltaTime)
 				break;
 			End = Start + traceLen * direction;
 
-			DrawDebugLine(GetWorld(), Start, End, FColor::Orange, false, 0.1f, 0, 7);
+			FVector TraceMeshEnd = FVector(0);
+			
+			//DrawDebugLine(GetWorld(), Start, End, FColor::Orange, false, 0.1f, 0, 7);
 			bShouldRef = false;
 			if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_laserTrace, CollisionParams)) {
+
+				TraceMeshEnd = OutHit.ImpactPoint;
+
 				text = OutHit.GetActor()->GetName();
 
 				if (OutHit.GetActor()->ActorHasTag("mirror"))
@@ -70,10 +77,28 @@ void Alaser_base::Tick(float DeltaTime)
 
 
 			}
+			else {
+				TraceMeshEnd = End;
+			}
+
+			//render=====================
+			FActorSpawnParameters spawnPara;
+			spawnPara.Owner = this;
+
+			UWorld* world = GetWorld();
+			if (world) {
+				AlaserMesh* Lmesh = world->SpawnActor<AlaserMesh>(FVector(0),
+					FRotator(0), spawnPara);
+
+				Lmesh->setTrans(Start, TraceMeshEnd);
+			}
+
+			//===============================
+
 		} while (bShouldRef);
 	}
 	else {
-		traceLaser += 100 * DeltaTime;
+		traceLaser += 400 * DeltaTime;
 	}
 
 
