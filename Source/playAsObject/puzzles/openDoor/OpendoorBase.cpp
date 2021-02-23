@@ -35,12 +35,24 @@ void AOpendoorBase::Tick(float DeltaTime)
 	if (DoorType == 1) {
 		if (bDoOpen) {
 			if (openPos > mesh->GetRelativeLocation().Z) {
-				mesh->SetRelativeLocation(FVector(0,0, mesh->GetRelativeLocation().Z + DeltaTime * OpenSpeed));
-			}	
+				mesh->SetRelativeLocation(FVector(0, 0, mesh->GetRelativeLocation().Z + DeltaTime * OpenSpeed));
+			}
 		}
 		else {
 			if (closePos < mesh->GetRelativeLocation().Z) {
 				mesh->SetRelativeLocation(FVector(0, 0, mesh->GetRelativeLocation().Z - DeltaTime * CloseSpeed));
+			}
+		}
+	}
+	else if (DoorType == 2){
+		if (bDoOpen) {
+			if (openPos > mesh->GetRelativeLocation().Y) {
+				mesh->SetRelativeLocation(FVector(0, 0, mesh->GetRelativeLocation().Y + DeltaTime * OpenSpeed));
+			}
+		}
+		else {
+			if (closePos < mesh->GetRelativeLocation().Y) {
+				mesh->SetRelativeLocation(FVector(0, 0, mesh->GetRelativeLocation().Y - DeltaTime * CloseSpeed));
 			}
 		}
 	}

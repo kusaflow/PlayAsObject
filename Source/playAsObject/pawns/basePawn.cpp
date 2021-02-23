@@ -114,6 +114,7 @@ void AbasePawn::changePawn() {
 		if (pawnA) {
 			UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(pawnA);
 		}
+		
 	}
 }
 
