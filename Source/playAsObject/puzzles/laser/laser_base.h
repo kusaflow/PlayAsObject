@@ -34,6 +34,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Laser", meta = (AllowPrivateAccess = "true"))
 	float traceLen = 1000;
 
+	UPROPERTY(EditDefaultsOnly, category = "kusa_Meshes")
+		TSubclassOf<class AlaserMesh> lm;
+
+	TArray<class AlaserMesh*> lm_array;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -41,5 +46,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void printV(FVector vec,float f);
 
 };

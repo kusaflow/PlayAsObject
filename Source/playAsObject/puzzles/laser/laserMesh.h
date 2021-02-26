@@ -15,14 +15,14 @@ public:
 	// Sets default values for this actor's properties
 	AlaserMesh();
 
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "meshes", meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Lmesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Laser", meta = (AllowPrivateAccess = "true"))
 		float LaserThickness = 0.05;
 
-
-
+	
 
 protected:
 	// Called when the game starts or when spawned
@@ -33,5 +33,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void setTrans(FVector start, FVector end);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void laserMeshProj(FVector start, FVector end);
+
 
 };

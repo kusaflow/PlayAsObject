@@ -47,28 +47,42 @@ void Alaser_base::Tick(float DeltaTime)
 
 		FVector End;
 		FCollisionQueryParams CollisionParams;
+		CollisionParams.bTraceComplex = true;
 
 		direction = laserPoint->GetForwardVector();
 		Start = laserPoint->GetComponentLocation();
 		laserBounce = 0;
+
+		//clear mesh data
+		int cnt = lm_array.Num();
+
+		for (int i = 0; i < cnt; i++) {
+			lm_array.Pop()->Destroy();
+		}
+
 		do {
 			laserBounce++;
 			if (laserBounce >= 10)
 				break;
 			End = Start + traceLen * direction;
 
-			FVector TraceMeshEnd = FVector(0);
+			
+			FVector TraceMeshEnd = End;
+			FVector TraceMeshStart = Start;
+
 			
 			//DrawDebugLine(GetWorld(), Start, End, FColor::Orange, false, 0.1f, 0, 7);
 			bShouldRef = false;
 			if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_laserTrace, CollisionParams)) {
 
-				TraceMeshEnd = OutHit.ImpactPoint;
-
+				printV(Start, 0);
+				printV(End, 1);
+				
 				text = OutHit.GetActor()->GetName();
 
 				if (OutHit.GetActor()->ActorHasTag("mirror"))
 				{
+					TraceMeshEnd = OutHit.ImpactPoint;
 					bShouldRef = true;
 					Start = OutHit.ImpactPoint;
 					direction = direction.MirrorByVector(OutHit.ImpactNormal);
@@ -78,21 +92,43 @@ void Alaser_base::Tick(float DeltaTime)
 
 			}
 			else {
-				TraceMeshEnd = End;
+				//render=====================
+
+				FActorSpawnParameters spawnPara;
+				spawnPara.Owner = this;
+
+				UWorld* world = GetWorld();
+				if (world && lm) {
+					AlaserMesh* Lmesh = world->SpawnActor<AlaserMesh>(lm, FVector(0),
+						FRotator(0), spawnPara);
+
+					Lmesh->setTrans(TraceMeshStart, TraceMeshEnd);
+
+					lm_array.Add(Lmesh);
+				}
+
+
+				//===============================
+
+				break;
 			}
 
 			//render=====================
+			
 			FActorSpawnParameters spawnPara;
 			spawnPara.Owner = this;
 
 			UWorld* world = GetWorld();
-			if (world) {
-				AlaserMesh* Lmesh = world->SpawnActor<AlaserMesh>(FVector(0),
+			if (world && lm) {
+				AlaserMesh* Lmesh = world->SpawnActor<AlaserMesh>(lm, FVector(0),
 					FRotator(0), spawnPara);
 
-				Lmesh->setTrans(Start, TraceMeshEnd);
+				Lmesh->setTrans(TraceMeshStart, TraceMeshEnd);
+
+				lm_array.Add(Lmesh);
 			}
 
+			
 			//===============================
 
 		} while (bShouldRef);

@@ -15,6 +15,7 @@ AlaserMesh::AlaserMesh()
 	LaserThickness = 0.05;
 }
 
+
 // Called when the game starts or when spawned
 void AlaserMesh::BeginPlay()
 {
@@ -31,6 +32,9 @@ void AlaserMesh::Tick(float DeltaTime)
 
 
 void AlaserMesh :: setTrans(FVector start, FVector end) {
+
+	laserMeshProj(start, end);
+	/*
 	FVector norm = start - end;
 	FVector forScale = norm;
 	norm.Normalize();
@@ -38,7 +42,7 @@ void AlaserMesh :: setTrans(FVector start, FVector end) {
 
 	Lmesh->SetWorldLocation(start);
 	Lmesh->SetWorldRotation(newRot);
-	Lmesh->SetWorldScale3D(FVector(LaserThickness, LaserThickness,forScale.Size()/100));
-
+	Lmesh->SetWorldScale3D(FVector(LaserThickness, LaserThickness,forScale.Size()*-1/100));
+	*/
 
 }
