@@ -36,7 +36,7 @@ void Alaser_base::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 
-	if (traceLaser >= 20) {
+	if (/*traceLaser >= 20*/true) {
 		traceLaser = 0;
 		//Line Trace
 		
@@ -77,12 +77,14 @@ void Alaser_base::Tick(float DeltaTime)
 
 				printV(Start, 0);
 				printV(End, 1);
-				
+
+				TraceMeshEnd = OutHit.ImpactPoint;
+
 				text = OutHit.GetActor()->GetName();
 
 				if (OutHit.GetActor()->ActorHasTag("mirror"))
 				{
-					TraceMeshEnd = OutHit.ImpactPoint;
+					
 					bShouldRef = true;
 					Start = OutHit.ImpactPoint;
 					direction = direction.MirrorByVector(OutHit.ImpactNormal);
