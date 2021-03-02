@@ -15,6 +15,9 @@ public:
 	// Sets default values for this actor's properties
 	AlaserGates_base();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "meshes", meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* Sensor;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -24,9 +24,6 @@ public:
 
 	bool bShouldRef;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "meshes", meta = (AllowPrivateAccess = "true"))
-	FString text;
-
 	float traceLaser;
 
 	float laserBounce = 0;

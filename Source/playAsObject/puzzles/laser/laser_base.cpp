@@ -6,6 +6,7 @@
 #include "Materials/Material.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "laserMesh.h"
+#include "../laserGate/laserGates_base.h"
 
 // Sets default values
 Alaser_base::Alaser_base()
@@ -36,7 +37,7 @@ void Alaser_base::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 
-	if (/*traceLaser >= 20*/true) {
+	if (traceLaser >= 20) {
 		traceLaser = 0;
 		//Line Trace
 		
@@ -74,23 +75,26 @@ void Alaser_base::Tick(float DeltaTime)
 			//DrawDebugLine(GetWorld(), Start, End, FColor::Orange, false, 0.1f, 0, 7);
 			bShouldRef = false;
 			if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_laserTrace, CollisionParams)) {
+				
+				AlaserGates_base* laserGate = Cast<AlaserGates_base>(OutHit.GetActor());
 
-				printV(Start, 0);
-				printV(End, 1);
-
-				TraceMeshEnd = OutHit.ImpactPoint;
-
-				text = OutHit.GetActor()->GetName();
-
-				if (OutHit.GetActor()->ActorHasTag("mirror"))
-				{
-					
-					bShouldRef = true;
-					Start = OutHit.ImpactPoint;
-					direction = direction.MirrorByVector(OutHit.ImpactNormal);
+				if (laserGate) {
 
 				}
+				else {
 
+					TraceMeshEnd = OutHit.ImpactPoint;
+
+					if (OutHit.GetActor()->ActorHasTag("mirror"))
+					{
+
+						bShouldRef = true;
+						Start = OutHit.ImpactPoint;
+						direction = direction.MirrorByVector(OutHit.ImpactNormal);
+
+					}
+
+				}
 
 			}
 			else {
