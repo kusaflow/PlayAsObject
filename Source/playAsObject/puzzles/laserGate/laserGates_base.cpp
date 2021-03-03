@@ -2,6 +2,7 @@
 
 
 #include "laserGates_base.h"
+#include "../openDoor/OpendoorBase.h"
 
 // Sets default values
 AlaserGates_base::AlaserGates_base()
@@ -10,9 +11,9 @@ AlaserGates_base::AlaserGates_base()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Sensor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Sensor"));
-	Sensor->SetupAttachment(RootComponent);
+	RootComponent = Sensor;
 
-
+	isOpen = false;
 
 }
 
@@ -27,6 +28,11 @@ void AlaserGates_base::BeginPlay()
 void AlaserGates_base::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	for (int i = 0; i < gates.Num(); i++) {
+		gates[i]->bDoOpen = isOpen;
+	}
+	
 
 }
 

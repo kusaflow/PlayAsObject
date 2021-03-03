@@ -36,6 +36,8 @@ public:
 
 	TArray<class AlaserMesh*> lm_array;
 
+	class AlaserGates_base* laserGate;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -32,9 +32,7 @@ void AlaserMesh::Tick(float DeltaTime)
 
 
 void AlaserMesh :: setTrans(FVector start, FVector end) {
-
-	laserMeshProj(start, end);
-	/*
+	
 	FVector norm = start - end;
 	FVector forScale = norm;
 	norm.Normalize();
@@ -43,6 +41,6 @@ void AlaserMesh :: setTrans(FVector start, FVector end) {
 	Lmesh->SetWorldLocation(start);
 	Lmesh->SetWorldRotation(newRot);
 	Lmesh->SetWorldScale3D(FVector(LaserThickness, LaserThickness,forScale.Size()*-1/100));
-	*/
+	
 
 }

@@ -18,6 +18,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "meshes", meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Sensor;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DoorType", meta = (AllowPrivateAccess = "true"))
+		TArray<class AOpendoorBase*> gates;
+
+	bool isOpen;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

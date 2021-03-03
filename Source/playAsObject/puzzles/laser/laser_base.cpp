@@ -75,16 +75,20 @@ void Alaser_base::Tick(float DeltaTime)
 			//DrawDebugLine(GetWorld(), Start, End, FColor::Orange, false, 0.1f, 0, 7);
 			bShouldRef = false;
 			if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_laserTrace, CollisionParams)) {
-				
-				AlaserGates_base* laserGate = Cast<AlaserGates_base>(OutHit.GetActor());
 
-				if (laserGate) {
+				TraceMeshEnd = OutHit.ImpactPoint;
 
+				AlaserGates_base* l_laserGate = Cast<AlaserGates_base>(OutHit.GetActor());
+
+				if (l_laserGate) {
+					laserGate = l_laserGate;
+					laserGate->isOpen = true;
 				}
 				else {
-
-					TraceMeshEnd = OutHit.ImpactPoint;
-
+					if (laserGate) {
+						laserGate->isOpen = false;
+					}
+					
 					if (OutHit.GetActor()->ActorHasTag("mirror"))
 					{
 
