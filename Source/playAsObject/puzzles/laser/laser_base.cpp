@@ -89,7 +89,7 @@ void Alaser_base::Tick(float DeltaTime)
 						laserGate->isOpen = false;
 					}
 					
-					if (OutHit.GetActor()->ActorHasTag("mirror"))
+					if (/*OutHit.GetActor()->ActorHasTag("mirror")*/OutHit.GetComponent()->ComponentHasTag("mirror"))
 					{
 
 						bShouldRef = true;
